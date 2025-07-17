@@ -23,7 +23,7 @@ const Login = () => {
       login(token); // ✅ Set token globally
 
       setMessage("Login successful! Redirecting...");
-      setTimeout(() => navigate("/"));
+      setTimeout(() => navigate("/dashboard"), 1000); // Redirect after 1 second
     } catch (error) {
       setMessage("Login failed. Please check your credentials.");
     }

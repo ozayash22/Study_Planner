@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FaTasks, FaHome } from "react-icons/fa";
+import { FaTasks, FaHome, FaBook } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 
@@ -35,6 +35,17 @@ const Sidebar = () => {
           }
         >
           <FaTasks /> Tasks
+        </NavLink>
+
+        <NavLink
+          to="/revision"
+          className={({ isActive }) =>
+            `flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-blue-50 transition ${
+              isActive ? "bg-blue-100 font-semibold" : ""
+            }`
+          }
+        >
+          <FaBook /> Revisions
         </NavLink>
       </nav>
       <button
