@@ -31,12 +31,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
             .authorizeHttpRequests()
-                // Public endpoints — accessible without login
-                .requestMatchers("/", "/api/auth/**").permitAll()
-                // Protected endpoints — require authentication
-                .requestMatchers("/api/tasks/**", "/api/revision/**", "/api/dashboard/**").authenticated()
-                // Deny all other requests (optional for strict security)
-                .anyRequest().denyAll()
+                .requestMatchers("/", "/index.html", "/favicon.ico", "/static/**").permitAll() // allow public frontend
+                .requestMatchers("/api/auth/**").permitAll() // allow login/register
+                .requestMatchers("/api/tasks/**", "/api/revision/**", "/api/dashboard/**").authenticated() // require auth
+                .anyRequest().permitAll() // allow any other request (optional: use `.denyAll()` for stricter rules)
             .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -58,16 +56,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Add your frontend and backend domains here (adjust accordingly)
-        configuration.setAllowedOrigins(List.of(
-            "http://localhost:3000",
-            "https://your-frontend-domain.onrender.com",
-            "https://study-planner-jbzc.onrender.com"
-        ));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "https://study-planner-jbzc.onrender.com")); // add Render domain
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
-
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

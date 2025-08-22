@@ -16,7 +16,7 @@ const Sidebar = () => {
       <div className="text-2xl font-bold text-blue-600 mb-8">StudyPlanner</div>
       <nav className="flex flex-col gap-4">
         <NavLink
-          to="/"
+          to="/dashboard"
           className={({ isActive }) =>
             `flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-blue-50 transition ${
               isActive ? "bg-blue-100 font-semibold" : ""
