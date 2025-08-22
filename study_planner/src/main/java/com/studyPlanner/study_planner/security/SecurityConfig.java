@@ -30,14 +30,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/tasks/**").authenticated()
-                .requestMatchers("/api/revision/**").authenticated()
-                .requestMatchers("/api/dashboard/**").authenticated()
-                .anyRequest().denyAll() // or .authenticated() if you want to secure everything else too
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .authorizeHttpRequests()
+                // Public endpoints — accessible without login
+                .requestMatchers("/", "/api/auth/**").permitAll()
+                // Protected endpoints — require authentication
+                .requestMatchers("/api/tasks/**", "/api/revision/**", "/api/dashboard/**").authenticated()
+                // Deny all other requests (optional for strict security)
+                .anyRequest().denyAll()
+            .and()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -57,10 +58,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        // Add your frontend and backend domains here (adjust accordingly)
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:3000",
+            "https://your-frontend-domain.onrender.com",
+            "https://study-planner-jbzc.onrender.com"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
