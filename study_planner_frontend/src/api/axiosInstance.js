@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:8080/api", // ✅ your Spring Boot base API URL
+  baseURL: "api", // ✅ your Spring Boot base API URL
 });
 
 // ✅ Automatically attach token to every request
